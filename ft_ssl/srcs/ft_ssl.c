@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/02 13:38:31 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/04 21:52:55 by zwang            ###   ########.fr       */
+/*   Updated: 2018/11/05 10:31:37 by zwang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,6 @@ uint32_t	b0 = 0xefcdab89;
 uint32_t	c0 = 0x98badcfe;
 uint32_t	d0 = 0x10325476;
 
-uint32_t	rol(uint32_t v, uint16_t amt)
-{
-    uint32_t	msk1 = (1 << amt) - 1;
-    return (((v >> (32 - amt)) & msk1) | ((v << amt) & ~msk1));
-}
-
 uint32_t	*preprocess(char *msg, uint64_t len, uint64_t bufsiz)
 {
 	uint32_t	*buf;
@@ -74,55 +68,70 @@ uint32_t	*preprocess(char *msg, uint64_t len, uint64_t bufsiz)
 
 void		inprocess(uint32_t *buf)
 {
-	uint32_t	a, b, c, d, i, j;
+	uint32_t	a, b, c, d, i, F, g;
 
-	j = -1;
-	while (++j < 16)
+	a = a0;
+	b = b0;
+	c = c0;
+	d = d0;
+	i = -1;
+	while (++i < 64)
 	{
-		a = a0;
-		b = b0;
-		c = c0;
-		d = d0;
-		i = -1;
-		while (++i < 64)
+		if (i <= 15)
 		{
-			uint32_t	F, g;
-			if (i <= 15)
-			{
-				F = (b & c) | (~b & d);
-				g = i;
-			}
-			else if (16 <= i && i <= 31)
-			{
-				F = (d & b) | (~d & c);
-				g = (5 * i + 1) % 16;
-			}
-			else if (32 <= i && i <= 47)
-			{
-				F = b ^ c ^ d;
-				g = (3 * i + 5) % 16;
-			}
-			else
-			{
-				F = c ^ (b | ~d);
-				g = (7 * i) % 16;
-			}
-			F = F + a + K[i] + buf[g];
-			a = d;
-			d = c;
-			c = b;
-			b = b + ROTLEFT(F, s[i]);
+			F = (b & c) | (~b & d);
+			g = i;
 		}
-		a0 += a;
-		b0 += b;
-		c0 += c;
-		d0 += d;
+		else if (16 <= i && i <= 31)
+		{
+			F = (d & b) | (~d & c);
+			g = (5 * i + 1) % 16;
+		}
+		else if (32 <= i && i <= 47)
+		{
+			F = b ^ c ^ d;
+			g = (3 * i + 5) % 16;
+		}
+		else
+		{
+			F = c ^ (b | ~d);
+			g = (7 * i) % 16;
+		}
+		F = F + a + K[i] + buf[g];
+		a = d;
+		d = c;
+		c = b;
+		b = b + ROTLEFT(F, s[i]);
 	}
+	a0 += a;
+	b0 += b;
+	c0 += c;
+	d0 += d;
 }
 
 void		postprocess(void)
 {
-	ft_printf("%08x%08x%08x%08x\n", a0, b0, c0, d0);
+	while (a0)
+	{
+		ft_printf("%02x", a0 % 256);
+		a0 >>= 8;
+	}
+	while (b0)
+	{
+		ft_printf("%02x", b0 % 256);
+		b0 >>= 8;
+	}
+	while (c0)
+	{
+		ft_printf("%02x", c0 % 256);
+		c0 >>= 8;
+	}
+	while (d0)
+	{
+		ft_printf("%02x", d0 % 256);
+		d0 >>= 8;
+	}
+	ft_printf("\n");
 }
 
 void		ft_ssl(char *msg)
@@ -137,6 +146,7 @@ void		ft_ssl(char *msg)
 		bufsiz += 1;
 	if (!(buf = preprocess(msg, len, bufsiz)))
 		ft_printf("malloc error\n");
+
 	inprocess(buf);
 	postprocess();
 }
