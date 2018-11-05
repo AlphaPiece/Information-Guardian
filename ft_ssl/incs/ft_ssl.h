@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 11:27:51 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/02 14:16:44 by zwang            ###   ########.fr       */
+/*   Updated: 2018/11/05 12:55:07 by zwang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,18 @@
 # include <stdint.h>
 # include "libft.h"
 
-# define ROTLEFT(a,b)		((a << b) | (a >> (32 - b)))
+# define ROTLEFT(a,b)	((a << b) | (a >> (32 - b)))
 
-# define F(x,y,z)			((x & y) | (~x & z))
-# define G(x,y,z)			((x & z) | (y & ~z))
-# define H(x,y,z)			(x ^ y ^ z)
-# define I(x,y,z)			(y ^ (x | ~z))
+typedef struct	s_var
+{
+	uint32_t	a;
+	uint32_t	b;
+	uint32_t	c;
+	uint32_t	d;
+	uint32_t	e;
+	uint32_t	f;
+}				t_var;
 
-# define FF(a,b,c,d,m,s,t)	a += F(b,c,d) + m + t; a = b + ROTLEFT(a,s);
-# define GG(a,b,c,d,m,s,t)	a += G(b,c,d) + m + t; a = b + ROTLEFT(a,s);
-# define HH(a,b,c,d,m,s,t)	a += H(b,c,d) + m + t; a = b + ROTLEFT(a,s);
-# define II(a,b,c,d,m,s,t)	a += I(b,c,d) + m + t; a = b + ROTLEFT(a,s);
+void	ft_md5(char *msg);
 
 #endif
