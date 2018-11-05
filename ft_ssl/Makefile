@@ -6,7 +6,7 @@
 #    By: zwang <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/10/19 13:25:39 by zwang             #+#    #+#              #
-#    Updated: 2018/11/02 14:16:06 by zwang            ###   ########.fr        #
+#    Updated: 2018/11/05 10:44:18 by zwang            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,8 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 
 SRCS = srcs/ft_ssl.c
-LIBS = srcs/libft/libft.a
-INCS = -I incs/ -I srcs/libft/incs/
+LIBS = libs/libft.a
+INCS = -I incs/ -I libs/libft_incs/
 
 all: $(NAME)
 
