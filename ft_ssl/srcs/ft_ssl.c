@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/02 13:38:31 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/02 15:50:35 by zwang            ###   ########.fr       */
+/*   Updated: 2018/11/04 21:52:55 by zwang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,16 +72,21 @@ uint32_t	*preprocess(char *msg, uint64_t len, uint64_t bufsiz)
 	return (buf);
 }
 
-void		inprocess(uint32_t *buf, uint64_t bufsiz)
+void		inprocess(uint32_t *buf)
 {
-	uint32_t	a = a0, b = b0, c = c0, d = d0, F, g, i, j;
+	uint32_t	a, b, c, d, i, j;
 
-	i = -1;
-	while (++i < bufsiz / 4)
+	j = -1;
+	while (++j < 16)
 	{
-		j = -1;
-		while (++j < 64)
+		a = a0;
+		b = b0;
+		c = c0;
+		d = d0;
+		i = -1;
+		while (++i < 64)
 		{
+			uint32_t	F, g;
 			if (i <= 15)
 			{
 				F = (b & c) | (~b & d);
@@ -97,7 +102,7 @@ void		inprocess(uint32_t *buf, uint64_t bufsiz)
 				F = b ^ c ^ d;
 				g = (3 * i + 5) % 16;
 			}
-			else if (48 <= i && i <= 63)
+			else
 			{
 				F = c ^ (b | ~d);
 				g = (7 * i) % 16;
@@ -106,7 +111,7 @@ void		inprocess(uint32_t *buf, uint64_t bufsiz)
 			a = d;
 			d = c;
 			c = b;
-			b = b + rol(F, s[i]);
+			b = b + ROTLEFT(F, s[i]);
 		}
 		a0 += a;
 		b0 += b;
@@ -132,7 +137,7 @@ void		ft_ssl(char *msg)
 		bufsiz += 1;
 	if (!(buf = preprocess(msg, len, bufsiz)))
 		ft_printf("malloc error\n");
-	inprocess(buf, bufsiz);
+	inprocess(buf);
 	postprocess();
 }
 
