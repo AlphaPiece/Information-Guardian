@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_md5.c                                           :+:      :+:    :+:   */
+/*   md5_base.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/02 13:38:31 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/05 12:53:05 by zwang            ###   ########.fr       */
+/*   Updated: 2018/11/05 15:22:17 by zwang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ uint32_t	g_b0 = 0xefcdab89;
 uint32_t	g_c0 = 0x98badcfe;
 uint32_t	g_d0 = 0x10325476;
 
-static uint32_t	*preprocess(char *msg, uint64_t len, uint64_t bufsiz)
+uint32_t	*preprocess(char *msg, uint64_t len, uint64_t bufsiz)
 {
 	uint32_t	*buf;
 	uint64_t	i;
@@ -66,7 +66,7 @@ static uint32_t	*preprocess(char *msg, uint64_t len, uint64_t bufsiz)
 	return (buf);
 }
 
-static void		inner_inprocess(uint32_t i, t_var *v, uint32_t *buf)
+static void	inner_inprocess(uint32_t i, t_var *v, uint32_t *buf)
 {
 	if (i <= 15)
 	{
@@ -95,7 +95,7 @@ static void		inner_inprocess(uint32_t i, t_var *v, uint32_t *buf)
 	v->b = v->b + ROTLEFT(v->f, g_s[i / 16][i % 4]);
 }
 
-static void		inprocess(uint32_t *buf)
+void		inprocess(uint32_t *buf)
 {
 	uint32_t	i;
 	t_var		v;
@@ -113,7 +113,7 @@ static void		inprocess(uint32_t *buf)
 	g_d0 += v.d;
 }
 
-static void		postprocess(void)
+void		postprocess(void)
 {
 	while (g_a0)
 	{
@@ -136,20 +136,4 @@ static void		postprocess(void)
 		g_d0 >>= 8;
 	}
 	ft_printf("\n");
-}
-
-void			ft_md5(char *msg)
-{
-	uint64_t	len;
-	uint64_t	bufsiz;
-	uint32_t	*buf;
-
-	len = ft_strlen(msg);
-	bufsiz = len + 1;
-	while (bufsiz % 64 != 0)
-		bufsiz += 1;
-	if (!(buf = preprocess(msg, len, bufsiz)))
-		ft_printf("malloc error\n");
-	inprocess(buf);
-	postprocess();
 }

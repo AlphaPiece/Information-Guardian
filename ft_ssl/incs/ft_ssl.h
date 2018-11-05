@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 11:27:51 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/05 12:55:07 by zwang            ###   ########.fr       */
+/*   Updated: 2018/11/05 15:23:46 by zwang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@ typedef struct	s_var
 	uint32_t	f;
 }				t_var;
 
-void	ft_md5(char *msg);
+uint32_t	*preprocess(char *msg, uint64_t len, uint64_t bufsiz);
+void		inprocess(uint32_t *buf);
+void		postprocess(void);
+
+void	md5_str(char *msg);
+void	md5_file(char *name);
 
 #endif
