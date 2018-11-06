@@ -6,11 +6,16 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/05 14:41:04 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/05 16:36:19 by zwang            ###   ########.fr       */
+/*   Updated: 2018/11/05 18:51:01 by zwang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
+
+/*
+** sublen: # of bytes of a portion of the string
+** bitlen: # of bits of the whole string
+*/
 
 void	md5_process(uint32_t *stream, uint64_t sublen, uint64_t bitlen,
 					char *input)
@@ -19,9 +24,11 @@ void	md5_process(uint32_t *stream, uint64_t sublen, uint64_t bitlen,
 	uint32_t	*buf;
 	uint64_t	i;
 
-	bufsiz = sublen + 1;
+	bufsiz = sublen;
 	while (bufsiz % 64 != 0)
 		bufsiz += 1;
+	if (sublen > 56)
+		bufsiz += 64;
 	if (!(buf = preprocess(stream, sublen, bitlen, bufsiz)))
 		ft_printf("malloc error\n");
 	i = -1;
