@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/02 13:38:31 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/05 15:22:17 by zwang            ###   ########.fr       */
+/*   Updated: 2018/11/05 16:34:17 by zwang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,24 +45,22 @@ uint32_t	g_b0 = 0xefcdab89;
 uint32_t	g_c0 = 0x98badcfe;
 uint32_t	g_d0 = 0x10325476;
 
-uint32_t	*preprocess(char *msg, uint64_t len, uint64_t bufsiz)
+uint32_t	*preprocess(uint32_t *stream, uint64_t sublen, uint64_t bitlen,
+						uint64_t bufsiz)
 {
 	uint32_t	*buf;
 	uint64_t	i;
-	uint64_t	j;
 	uint8_t		*p;
 
 	if (!(buf = (uint32_t *)malloc(bufsiz + 1)))
 		return (NULL);
-	ft_memcpy(buf, msg, len);
+	ft_memcpy(buf, stream, sublen);
 	p = (uint8_t *)buf;
-	p[len] = 0x80;
+	p[sublen] = 0x80;
 	i = 1;
-	while (len + i < bufsiz - 8)
-		p[len + i++] = 0x00;
-	j = len * 8;
-	ft_memcpy(&p[len + i], &j, 8);
-	j = 0;
+	while (sublen + i < bufsiz - 8)
+		p[sublen + i++] = 0x00;
+	ft_memcpy(&p[sublen + i], &bitlen, 8);
 	return (buf);
 }
 
@@ -113,8 +111,9 @@ void		inprocess(uint32_t *buf)
 	g_d0 += v.d;
 }
 
-void		postprocess(void)
+void		postprocess(char *input)
 {
+	ft_printf("MD5 (%s) = ", input);
 	while (g_a0)
 	{
 		ft_printf("%02x", g_a0 % 256);
