@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 11:27:51 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/05 16:36:24 by zwang            ###   ########.fr       */
+/*   Updated: 2018/11/05 19:02:16 by zwang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include <stdint.h>
 # include "libft.h"
+
+# define IS_MD5(s)		(ft_strequ(s, "md5") || ft_strequ(s, "MD5"))
 
 # define ROTLEFT(a,b)	((a << b) | (a >> (32 - b)))
 
