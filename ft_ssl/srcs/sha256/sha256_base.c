@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/05 19:04:19 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/05 20:10:51 by zwang            ###   ########.fr       */
+/*   Updated: 2018/11/06 12:02:46 by zwang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,7 @@ uint32_t	k[64] = \
 	0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 }
 
+uint32_t	*preprocess(uint32_t *stream, uint64_t sublen, uint64_t bitlen,
+						uint64_t bufsiz)
+{
 

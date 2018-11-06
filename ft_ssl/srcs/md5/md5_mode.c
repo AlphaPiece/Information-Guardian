@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/05 14:41:04 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/05 18:51:01 by zwang            ###   ########.fr       */
+/*   Updated: 2018/11/06 12:02:20 by zwang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ void	md5_process(uint32_t *stream, uint64_t sublen, uint64_t bitlen,
 		bufsiz += 1;
 	if (sublen > 56)
 		bufsiz += 64;
-	if (!(buf = preprocess(stream, sublen, bitlen, bufsiz)))
+	if (!(buf = md5_preprocess(stream, sublen, bitlen, bufsiz)))
 		ft_printf("malloc error\n");
 	i = -1;
 	while (++i < bufsiz / 64)
-		inprocess(buf + i * 16);
-	postprocess(input);
+		md5_inprocess(buf + i * 16);
+	md5_postprocess(input);
 }
 
 void	md5_str(char *msg)
@@ -63,7 +63,7 @@ void	md5_file(char *name)
 	bitlen = 0;
 	while ((sublen = read(fd, buf, 64)) == 64)
 	{
-		inprocess(buf);
+		md5_inprocess(buf);
 		bitlen += 512;
 		ft_bzero(buf, 64);
 	}

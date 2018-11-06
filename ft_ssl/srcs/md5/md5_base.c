@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/02 13:38:31 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/05 16:34:17 by zwang            ###   ########.fr       */
+/*   Updated: 2018/11/06 12:01:00 by zwang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ uint32_t	g_b0 = 0xefcdab89;
 uint32_t	g_c0 = 0x98badcfe;
 uint32_t	g_d0 = 0x10325476;
 
-uint32_t	*preprocess(uint32_t *stream, uint64_t sublen, uint64_t bitlen,
+uint32_t	*md5_preprocess(uint32_t *stream, uint64_t sublen, uint64_t bitlen,
 						uint64_t bufsiz)
 {
 	uint32_t	*buf;
@@ -93,7 +93,7 @@ static void	inner_inprocess(uint32_t i, t_var *v, uint32_t *buf)
 	v->b = v->b + ROTLEFT(v->f, g_s[i / 16][i % 4]);
 }
 
-void		inprocess(uint32_t *buf)
+void		md5_inprocess(uint32_t *buf)
 {
 	uint32_t	i;
 	t_var		v;
@@ -111,7 +111,7 @@ void		inprocess(uint32_t *buf)
 	g_d0 += v.d;
 }
 
-void		postprocess(char *input)
+void		md5_postprocess(char *input)
 {
 	ft_printf("MD5 (%s) = ", input);
 	while (g_a0)
