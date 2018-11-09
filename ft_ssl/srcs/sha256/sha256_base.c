@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/05 19:04:19 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/08 21:11:11 by zwang            ###   ########.fr       */
+/*   Updated: 2018/11/09 13:23:55 by zwang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,18 @@ uint32_t	*sha256_preprocess(uint32_t *stream, uint64_t sublen, uint64_t bitlen,
 		reverse_4_bytes(&buf[j]);
 	ft_memcpy(&p[sublen + i], &bitlen, 8);
 	ft_memswap(&p[sublen + i], &p[sublen + i] + 4, 4);
-	for (int k = 0; k < 16; k++)
-		ft_putbits(&buf[k], 32);
+	
+	for (int k = 0; k < 64; k++)
+		ft_printf("%08x\n", buf[k]);
+
 	return (buf);
+}
+
+void		print_process(uint32_t i, uint32_t a, uint32_t b, uint32_t c, uint32_t d,
+							uint32_t e, uint32_t f, uint32_t g, uint32_t h)
+{
+	ft_printf("%3d: %08x %08x %08x %08x %08x %08x %08x %08x\n",
+				i, a, b, c, d, e, f, g, h);
 }
 
 void		sha256_inprocess(uint32_t *chunk)
@@ -93,16 +102,21 @@ void		sha256_inprocess(uint32_t *chunk)
 	uint32_t	i;
 	uint32_t	tmp[3];
 	
+	ft_bzero(w, 256);
 	ft_memcpy(w, chunk, 64);
 	i = 15;
 	while (++i < 64)
 	{
 		s0 = ROTRIGHT(w[i - 15], 7) ^ ROTRIGHT(w[i - 15], 18) ^
-				ROTRIGHT(w[i - 15], 3);
+				(w[i - 15] >> 3);
 		s1 = ROTRIGHT(w[i - 2], 17) ^ ROTRIGHT(w[i - 2], 19) ^
-				ROTRIGHT(w[i - 2], 10);
+				(w[i - 2] >> 10);
 		w[i] = w[i - 16] + s0 + w[i - 7] + s1;
 	}
+//	ft_printf("-------------------------\n");
+//	for (int k = 0; k < 64; k++)
+//		ft_printf("%08x\n", w[k]);
+//	ft_printf("-------------------------\n");
 	a = h0;
 	b = h1;
 	c = h2;
@@ -128,6 +142,12 @@ void		sha256_inprocess(uint32_t *chunk)
 		c = b;
 		b = a;
 		a = t1 + t2;
+//		if (i == 14)
+//		{
+//			ft_printf("k[i]: %08x\n", k[i]);
+//			ft_printf("w[i]: %08x\n", w[i]);
+//			print_process(i, a, b, c, d, e, f, g, h);
+//		}
 	}
 	h0 += a;
 	h1 += b;
@@ -136,7 +156,7 @@ void		sha256_inprocess(uint32_t *chunk)
 	h4 += e;
 	h5 += f;
 	h6 += g;
-	h7 += h;	
+	h7 += h;
 }
 
 void		sha256_postprocess(char *input)

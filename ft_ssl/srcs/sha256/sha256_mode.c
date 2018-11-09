@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/06 12:47:15 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/08 19:42:32 by zwang            ###   ########.fr       */
+/*   Updated: 2018/11/09 11:51:53 by zwang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,25 @@ void	sha256_str(char *msg)
 	input = ft_strcompose(3, "\"", msg, "\"");
 	sha256_process((uint32_t *)msg, sublen, bitlen, input);
 	free(input);
+}
+
+void	sha256_file(char *name)
+{
+	uint32_t	buf[16];
+	int			fd;
+	uint64_t	sublen;
+	uint64_t	bitlen;
+
+	fd = open(name, O_RDONLY);
+	ft_bzero(buf, 64);
+	sublen = 0;
+	bitlen = 0;
+	while ((sublen = read(fd, buf, 64)) == 64)
+	{
+		sha256_inprocess(buf);
+		bitlen += 512;
+		ft_bzero(buf, 64);
+	}
+	bitlen += sublen * 8;
+	sha256_process(buf, sublen, bitlen, name);
 }
