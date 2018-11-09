@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/02 13:38:31 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/06 12:01:00 by zwang            ###   ########.fr       */
+/*   Updated: 2018/11/06 13:08:50 by zwang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ uint32_t	*md5_preprocess(uint32_t *stream, uint64_t sublen, uint64_t bitlen,
 	uint64_t	i;
 	uint8_t		*p;
 
-	if (!(buf = (uint32_t *)malloc(bufsiz + 1)))
+	if (!(buf = (uint32_t *)malloc(bufsiz)))
 		return (NULL);
 	ft_memcpy(buf, stream, sublen);
 	p = (uint8_t *)buf;
@@ -64,7 +64,7 @@ uint32_t	*md5_preprocess(uint32_t *stream, uint64_t sublen, uint64_t bitlen,
 	return (buf);
 }
 
-static void	inner_inprocess(uint32_t i, t_var *v, uint32_t *buf)
+static void	_md5_inprocess(uint32_t i, t_var *v, uint32_t *chunk)
 {
 	if (i <= 15)
 	{
@@ -86,14 +86,14 @@ static void	inner_inprocess(uint32_t i, t_var *v, uint32_t *buf)
 		v->f = v->c ^ (v->b | ~(v->d));
 		v->e = (7 * i) % 16;
 	}
-	v->f = v->f + v->a + g_t[i] + buf[v->e];
+	v->f = v->f + v->a + g_t[i] + chunk[v->e];
 	v->a = v->d;
 	v->d = v->c;
 	v->c = v->b;
 	v->b = v->b + ROTLEFT(v->f, g_s[i / 16][i % 4]);
 }
 
-void		md5_inprocess(uint32_t *buf)
+void		md5_inprocess(uint32_t *chunk)
 {
 	uint32_t	i;
 	t_var		v;
@@ -104,7 +104,7 @@ void		md5_inprocess(uint32_t *buf)
 	v.d = g_d0;
 	i = -1;
 	while (++i < 64)
-		inner_inprocess(i, &v, buf);
+		_md5_inprocess(i, &v, chunk);
 	g_a0 += v.a;
 	g_b0 += v.b;
 	g_c0 += v.c;

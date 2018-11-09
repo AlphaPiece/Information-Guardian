@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/11 11:20:28 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/04 14:52:21 by zwang            ###   ########.fr       */
+/*   Updated: 2018/11/08 18:53:09 by zwang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void				*ft_memset(void *b, int c, size_t len);
 unsigned int		ft_getbits(unsigned int x, int p, int n);
 unsigned int		ft_setbits(unsigned int x, int p, int n, unsigned int y);
 unsigned int		ft_invertbits(unsigned int x, int p, int n);
-void				ft_swap(size_t byte, void *n1, void *n2);
+void				ft_memswap(void *p1, void *p2, size_t byte);
 void				*ft_memrealloc(void **ptr, size_t size);
 void				ft_putbits(void *x, size_t bit);
 
