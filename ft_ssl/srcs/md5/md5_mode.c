@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/05 14:41:04 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/06 12:53:25 by zwang            ###   ########.fr       */
+/*   Updated: 2019/02/09 13:04:54 by Zexi Wang        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,11 @@ void	md5_file(char *name)
 	uint64_t	sublen;
 	uint64_t	bitlen;
 
-	fd = open(name, O_RDONLY);
+	if ((fd = open(name, O_RDONLY)) < 0)
+	{
+		ft_printf("ft_ssl: No such file or directory\n");
+		exit(1);
+	}
 	ft_bzero(buf, 64);
 	sublen = 0;
 	bitlen = 0;

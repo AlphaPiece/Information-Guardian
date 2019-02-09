@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/11 11:20:28 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/08 18:53:09 by zwang            ###   ########.fr       */
+/*   Updated: 2019/02/06 18:45:48 by Zexi Wang        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stddef.h>
 # include <fcntl.h>
 # include <stdint.h>
+# include <time.h>
 # include "ft_nextline.h"
 # include "ft_vdprintf.h"
 # include "ft_bnt_to_bst.h"
@@ -122,7 +123,7 @@ char				*ft_ntoa_base(intmax_t n, int base, char hex_case_a);
 char				*ft_untoa_base(uintmax_t un, int base, char hex_case_a);
 double				ft_sqrt(double n);
 double				ft_pow(double n, int pow);
-void				ft_factor_prime(int n);
+void				ft_prime_factors(int n);
 double				ft_ceil(double n);
 double				ft_floor(double n);
 t_fcompo			*ft_analyze_float(float n);
@@ -134,6 +135,7 @@ int					ft_sum(int total_num, ...);
 int					ft_max_intarr(int arr[], size_t len);
 int					ft_min_intarr(int arr[], size_t	len);
 int					ft_sum_intarr(int arr[], size_t len);
+int                 *ft_randintarr(int lower, int upper, int len);
 
 /*
 ** =======================
@@ -224,6 +226,7 @@ void				ft_putchar_fd(char c, int fd);
 void				ft_putchar(char c);
 void				ft_putnchar_fd(char c, int n, int fd);
 void				ft_putnchar(char c, int n);
+void				ft_putncharln(char c, int n);
 void				ft_putendl_fd(const char *s, int fd);
 void				ft_putendl(const char *s);
 void				ft_putnbr_fd(int n, int fd);
@@ -235,6 +238,7 @@ void				ft_putlstr_fd(const char *str, unsigned int start,
 void				ft_putlstr(const char *str, unsigned int start,
 								size_t len);
 int					ft_getchar(void);
+int					ft_getonechar(void);
 int					ft_nextchar(void);
 void				ft_savechar(int c);
 int					ft_nextword(char *word, int limit);
@@ -267,6 +271,7 @@ void				ft_lstdel(t_list **alst, void (*del)(void *, size_t));
 void				ft_lstdelone(t_list **alst, void (*del)(void*, size_t));
 void				ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 t_list				*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
+t_list				*ft_swapppairs(t_list *head);
 
 /*
 ** ==========================
