@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 11:27:51 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/06 14:20:39 by zwang            ###   ########.fr       */
+/*   Updated: 2019/02/18 13:55:09 by Zexi Wang        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,14 @@
 
 # define ROTLEFT(a, b)	((a << b) | (a >> (32 - b)))
 # define ROTRIGHT(a, b)	((a >> b) | (a << (32 - b)))
+
+typedef struct	s_op
+{
+	t_bool		s;
+	t_bool		p;
+	t_bool		q;
+	t_bool		r;
+}				t_op;
 
 typedef struct	s_var
 {
@@ -39,25 +47,11 @@ typedef struct	s_var
 uint32_t		*md5_preprocess(uint32_t *stream, uint64_t sublen,
 								uint64_t bitlen, uint64_t bufsiz);
 void			md5_inprocess(uint32_t *chunk);
-void			md5_postprocess(char *input);
+void			md5_postprocess(char *input, t_op *op);
 
-void			md5_process(uint32_t *stream, uint64_t sublen,
-							uint64_t bitlen, char *input);
-void			md5_str(char *msg);
-void			md5_file(char *name);
-
-/*
-** SHA256
-*/
-
-uint32_t		*sha256_preprocess(uint32_t *stream, uint64_t sublen,
-									uint64_t bitlen, uint64_t bufsiz);
-void			sha256_inprocess(uint32_t *chunk);
-void			sha256_postprocess(char *input);
-
-void			sha256_process(uint32_t *stream, uint64_t sublen,
-								uint64_t bitlen, char *input);
-void			sha256_str(char *msg);
-void			sha256_file(char *name);
+void			md5_process(uint32_t *stream, uint64_t sublen, uint64_t bitlen);
+void			md5_str(char *msg, t_op *op);
+void			md5_file(char *name, t_op *op);
+void			md5_reset(void);
 
 #endif

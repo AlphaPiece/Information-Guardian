@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/11 11:20:28 by zwang             #+#    #+#             */
-/*   Updated: 2019/02/06 18:45:48 by Zexi Wang        ###   ########.fr       */
+/*   Updated: 2019/02/09 15:09:48 by Zexi Wang        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,9 +246,6 @@ int					ft_vdprintf(int fd, const char *format, va_list args);
 int					ft_printf(const char *format, ...);
 int					ft_dprintf(int fd, const char *format, ...);
 int					ft_nextline(const int fd, char **line);
-int					ft_readline(const int fd, char **line);
-long				ft_read(char *file_name, char **content);
-int					ft_readlines(char *file_name, char ***lines);
 
 /*
 ** =========================

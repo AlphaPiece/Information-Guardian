@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/02 13:38:31 by zwang             #+#    #+#             */
-/*   Updated: 2018/11/06 13:08:50 by zwang            ###   ########.fr       */
+/*   Updated: 2019/02/18 14:54:22 by Zexi Wang        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,13 @@ uint32_t	g_c0 = 0x98badcfe;
 uint32_t	g_d0 = 0x10325476;
 
 uint32_t	*md5_preprocess(uint32_t *stream, uint64_t sublen, uint64_t bitlen,
-						uint64_t bufsiz)
+							uint64_t bufsiz)
 {
 	uint32_t	*buf;
 	uint64_t	i;
 	uint8_t		*p;
 
-	if (!(buf = (uint32_t *)malloc(bufsiz)))
+	if (!(buf = (uint32_t *)ft_memalloc(sizeof(uint32_t) * bufsiz)))
 		return (NULL);
 	ft_memcpy(buf, stream, sublen);
 	p = (uint8_t *)buf;
@@ -111,9 +111,12 @@ void		md5_inprocess(uint32_t *chunk)
 	g_d0 += v.d;
 }
 
-void		md5_postprocess(char *input)
+void		md5_postprocess(char *input, t_op *op)
 {
-	ft_printf("MD5 (%s) = ", input);
+	if (op->p)
+		ft_printf("%s", input);
+	else if (!op->q && !op->r)
+		ft_printf("MD5 (%s) = ", input);
 	while (g_a0)
 	{
 		ft_printf("%02x", g_a0 % 256);
@@ -134,5 +137,8 @@ void		md5_postprocess(char *input)
 		ft_printf("%02x", g_d0 % 256);
 		g_d0 >>= 8;
 	}
+	if (!op->p && op->r && !op->q)
+		ft_printf(" %s", input);
 	ft_printf("\n");
+	md5_reset();
 }
