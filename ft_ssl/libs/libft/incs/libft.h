@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/11 11:20:28 by zwang             #+#    #+#             */
-/*   Updated: 2019/02/09 15:09:48 by Zexi Wang        ###   ########.fr       */
+/*   Updated: 2019/04/06 14:17:04 by Zexi Wang        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include "ft_nextline.h"
 # include "ft_vdprintf.h"
 # include "ft_bnt_to_bst.h"
+# include "libhmap.h"
 
 typedef enum		e_bool
 {
@@ -44,8 +45,13 @@ typedef enum		e_state
 */
 
 /*
-** ARRLEN: len of an array; only for stack array
-** BITNUM: num of bit of 1 byte
+** ARRLEN:	len of an array; only for stack array
+** BYTE:	# of bit for a byte
+** WORD:	# of bit for a word
+** BIT8:	# of byte for type uint8_t
+** BIT16:	# of byte for type uint16_t
+** BIT32:	# of byte for type uint32_t
+** BIT64:	# of byte for type uint64_t
 */
 
 # define ARRLEN(a)	(sizeof(a) / sizeof(a[0]))
@@ -86,7 +92,7 @@ unsigned int		ft_getbits(unsigned int x, int p, int n);
 unsigned int		ft_setbits(unsigned int x, int p, int n, unsigned int y);
 unsigned int		ft_invertbits(unsigned int x, int p, int n);
 void				ft_memswap(void *p1, void *p2, size_t byte);
-void				*ft_memrealloc(void **ptr, size_t size);
+void				*ft_memrealloc(void **ptr, size_t oldsize, size_t newsize);
 void				ft_putbits(void *x, size_t bit);
 
 /*
@@ -97,7 +103,14 @@ void				ft_putbits(void *x, size_t bit);
 ** ==============
 */
 
-# define ABS(x)		(((x) < 0) ? -(x) : (x))
+/*
+** F_PREC:	double float decimal digits of precision
+** ABS:		absolute value
+*/
+
+# define F_PREC	15	
+
+# define ABS(x)	(((x) < 0) ? -(x) : (x))
 
 /*
 ** t_fcompo:	contains all the parts of a single float type data
@@ -113,14 +126,15 @@ typedef struct		s_fcompo
 	long			mantissa;
 }					t_fcompo;
 
+int					ft_numlen(intmax_t n);
+int					ft_unumlen(uintmax_t un);
 char				*ft_itoa(int n);
 char				*ft_ltoa(long n);
 char				*ft_ntoa(intmax_t n);
 char				*ft_untoa(uintmax_t un);
-size_t				ft_numlen(intmax_t n);
-size_t				ft_unumlen(uintmax_t un);
 char				*ft_ntoa_base(intmax_t n, int base, char hex_case_a);
 char				*ft_untoa_base(uintmax_t un, int base, char hex_case_a);
+char				*ft_ftoa(double n);
 double				ft_sqrt(double n);
 double				ft_pow(double n, int pow);
 void				ft_prime_factors(int n);
@@ -129,13 +143,16 @@ double				ft_floor(double n);
 t_fcompo			*ft_analyze_float(float n);
 int					*ft_numarrcpy(int *dst, const int *src, size_t len);
 t_bool				ft_iselem(size_t byte, void *arr, size_t len, void *num);
-int					ft_max(int total_num, ...);
-int					ft_min(int total_num, ...);
-int					ft_sum(int total_num, ...);
+long				ft_max(int total_num, ...);
+long				ft_min(int total_num, ...);
+long				ft_sum(int total_num, ...);
 int					ft_max_intarr(int arr[], size_t len);
 int					ft_min_intarr(int arr[], size_t	len);
 int					ft_sum_intarr(int arr[], size_t len);
 int                 *ft_randintarr(int lower, int upper, int len);
+long long			ft_factorial(int n);
+long long			ft_fibonacci(int n);
+long long			ft_uglynum(int n);
 
 /*
 ** =======================
@@ -310,6 +327,12 @@ typedef struct		s_btree
 
 t_btree				*ft_bntnew(void *data);
 void				ft_bntview(t_btree *bt, char type);
+void				ft_bntdel(t_btree **node);
+
+/*
+** DEPTH FIRST SEARCH
+*/
+
 void				ft_bntiter_in(t_btree *node, void (*f)(void *));
 void				ft_bntiter_pre(t_btree *node, void (*f)(void *));
 void				ft_bntiter_post(t_btree *node, void (*f)(void *));
@@ -327,6 +350,11 @@ void				ft_bntalter_post(t_btree *node, void *(*f)(void *));
 
 t_bool				ft_isbst(t_btree *bt, char *data_type);
 t_btree				*ft_bnt_to_bst(t_btree *bnt, int node_amt, char *data_type);
+void				ft_bstdelroot(t_btree **root);
+void				ft_bstdel(t_btree **root, void *item,
+								int (*cmp)(void *, void *));
+void				*ft_bstpopmax(t_btree **root);
+void				*ft_bstpopmin(t_btree **root);
 t_btree				*ft_bstinsert(t_btree *bst, void *item,
 									int (*cmp)(void *, void *));
 void				*ft_bstsearch(t_btree *bst, void *data_ref,
@@ -354,39 +382,5 @@ typedef struct		s_rbtree
 	struct s_rbtree	*right;
 	enum e_rbcolor	color;
 }					t_rbtree;
-
-/*
-** ========================================
-** >                                      <
-** >>> HASH-BASED STRUCTURE: HASH TABLE <<<
-** >                                      <
-** ========================================
-*/
-
-unsigned int		ft_hash_str(const char *s, unsigned int hashsize);
-
-typedef struct		s_pair
-{
-	char			*key;
-	void			*value;
-	struct s_pair	*next;
-}					t_pair;
-
-t_pair				*ft_pairnew(char *key, void *value);
-
-# define DICT_SPACE	512
-
-typedef struct		s_dict
-{
-	t_pair			**set;
-	int				pair_num;
-}					t_dict;
-
-t_dict				*ft_dictnew(void);
-void				ft_dictadd(t_dict *dict, char *key, void *value);
-void				*ft_dictget(t_dict *dict, char *key);
-void				ft_dictremove(t_dict *dict, char *key);
-void				ft_dictclear(t_dict *dict);
-void				ft_dictdel(t_dict **dict);
 
 #endif

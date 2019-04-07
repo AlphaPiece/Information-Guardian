@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/02 13:38:31 by zwang             #+#    #+#             */
-/*   Updated: 2019/02/18 14:54:22 by Zexi Wang        ###   ########.fr       */
+/*   Updated: 2019/04/06 21:23:17 by Zexi Wang        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,12 +111,8 @@ void		md5_inprocess(uint32_t *chunk)
 	g_d0 += v.d;
 }
 
-void		md5_postprocess(char *input, t_op *op)
+void		md5_passcode(void)
 {
-	if (op->p)
-		ft_printf("%s", input);
-	else if (!op->q && !op->r)
-		ft_printf("MD5 (%s) = ", input);
 	while (g_a0)
 	{
 		ft_printf("%02x", g_a0 % 256);
@@ -137,6 +133,15 @@ void		md5_postprocess(char *input, t_op *op)
 		ft_printf("%02x", g_d0 % 256);
 		g_d0 >>= 8;
 	}
+}
+
+void		md5_postprocess(char *input, t_op *op)
+{
+	if (op->p)
+		ft_printf("%s", input);
+	else if (!op->q && !op->r)
+		ft_printf("MD5 (%s) = ", input);
+	md5_passcode();
 	if (!op->p && op->r && !op->q)
 		ft_printf(" %s", input);
 	ft_printf("\n");

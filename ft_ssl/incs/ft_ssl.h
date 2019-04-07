@@ -6,7 +6,7 @@
 /*   By: zwang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 11:27:51 by zwang             #+#    #+#             */
-/*   Updated: 2019/02/18 13:55:09 by Zexi Wang        ###   ########.fr       */
+/*   Updated: 2019/04/06 21:28:03 by Zexi Wang        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct	s_var
 uint32_t		*md5_preprocess(uint32_t *stream, uint64_t sublen,
 								uint64_t bitlen, uint64_t bufsiz);
 void			md5_inprocess(uint32_t *chunk);
+void			md5_passcode(void);
 void			md5_postprocess(char *input, t_op *op);
 
 void			md5_process(uint32_t *stream, uint64_t sublen, uint64_t bitlen);
