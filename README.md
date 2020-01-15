@@ -1,4 +1,4 @@
-# InformationGuardian
+# Information Guardian
 
 ## *To protect the world from devastation!*
 
